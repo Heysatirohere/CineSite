@@ -1,48 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom'; 
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import styles from '../Styles/HomePage.module.css'; 
+import React from 'react';
 import { motion } from 'framer-motion';
+import styles from '../Styles/HomePage.module.css';
 
 import Spinner from "../Components/Spinner.jsx";
 import ErrorMessage from "../Components/ErrorMessage.jsx";
 import MovieCard from "../Components/MovieCard.jsx";
-import Pagination from '../Components/Pagination.jsx'; 
+import Pagination from '../Components/Pagination.jsx';
+import FilterControls from '../Components/FilterControl.jsx';
 
-const API_URL = import.meta.env.VITE_API_URL;
-const API_KEY = import.meta.env.VITE_API_KEY;
-const API_PAGE_LIMIT = 500;
-
-const fetchPopularMovies = async (page) => {
-  const { data } = await axios.get(`${API_URL}/movie/popular`, {
-    params: {
-      api_key: API_KEY,
-      language: 'pt-BR',
-      page: page 
-    }
-  });
-
-  return {
-    movies: data.results,
-    totalPages: data.total_pages
-  };
-};
-
-const fetchSearchMovies = async (query, page) => {
-  const { data } = await axios.get(`${API_URL}/search/movie`, {
-    params: {
-      api_key: API_KEY,
-      language: 'pt-BR',
-      query: query,
-      page: page
-    }
-  });
-  return {
-    movies: data.results,
-    totalPages: data.total_pages
-  };
-};
+import useMovieFilters from '../Hook/useMovieFilters.js';
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -57,53 +23,25 @@ const pageTransition = {
 };
 
 function HomePage({ searchTerm }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initialPage = parseInt(searchParams.get('page') || '1', 10);
-  const [page, setPage] = useState(initialPage);
+  const {
+    page,
+    selectedGenre,
+    sliderRating,
+    genres,
+    movies,
+    totalPages,
+    isLoadingGenres,
+    isLoadingMovies,
+    isErrorMovies,
+    isFetchingMovies,
+    handleGenreChange,
+    handleSliderRatingChange,
+    handlePageChange,
+    handleResetFilters,
+  } = useMovieFilters(searchTerm);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['movies', searchTerm, page], 
-    queryFn: () => {
-      if (searchTerm === '' || searchTerm === null) {
-        return fetchPopularMovies(page);
-      } else {
-        return fetchSearchMovies(searchTerm, page);
-      }
-    },
-    keepPreviousData: true 
-  });
-
-  useEffect(() => {
-    const currentSearchParam = searchParams.get('search');
-    if ((searchTerm && searchTerm !== currentSearchParam) || (!searchTerm && currentSearchParam)) {
-        setPage(1); 
-    }
-  }, [searchTerm, searchParams]);
-
-  useEffect(() => {
-    const params = {};
-    if (searchTerm) {
-      params.search = searchTerm;
-    }
-    params.page = page.toString();
-    setSearchParams(params, { replace: true }); 
-  }, [page, searchTerm, setSearchParams]);
-
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (isError) {
-    return <ErrorMessage message="Não foi possível carregar os filmes." />;
-  }
-
-  const movies = data?.movies;
-  const totalPagesFromAPI = data?.totalPages;
-  const totalPages = Math.min(totalPagesFromAPI || 0, API_PAGE_LIMIT); 
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage); 
-  };
+  if ((isLoadingMovies || isLoadingGenres) && !movies) return <Spinner />;
+  if (isErrorMovies) return <ErrorMessage message="Não foi possível carregar os filmes." />;
 
   return (
     <motion.div
@@ -113,17 +51,32 @@ function HomePage({ searchTerm }) {
       variants={pageVariants}
       transition={pageTransition}
     >
-      <div className="container"> 
+      <div className="container">
+        <FilterControls
+          genres={genres}
+          selectedGenre={selectedGenre}
+          minRating={sliderRating}
+          onGenreChange={handleGenreChange}
+          onRatingChange={handleSliderRatingChange}
+          onResetFilters={handleResetFilters}
+          disabled={!!searchTerm || isLoadingGenres}
+        />
+
+        {isFetchingMovies && (
+          <div style={{ textAlign: 'center', padding: '1rem', opacity: 0.7 }}>
+            <Spinner />
+          </div>
+        )}
+
         <div className={styles.movieGrid}>
-          {movies && movies.length > 0 ? (
-            movies.map(movie => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))
+          {movies?.length ? (
+            movies.map(movie => <MovieCard key={movie.id} movie={movie} />)
           ) : (
-            !isLoading && <p>Nenhum filme encontrado.</p>
+            !isFetchingMovies && <p>Nenhum filme encontrado para os critérios selecionados.</p>
           )}
         </div>
-        {totalPages > 0 && movies && movies.length > 0 && (
+
+        {totalPages > 1 && movies?.length > 0 && (
           <Pagination
             currentPage={page}
             totalPages={totalPages}
