@@ -9,10 +9,10 @@ import ErrorMessage from "../Components/ErrorMessage.jsx";
 import MovieCard from "../Components/MovieCard.jsx";
 import Pagination from '../Components/Pagination.jsx'; 
 
-
 // API's TMDB
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
+const API_PAGE_LIMIT = 500;
 
 const fetchPopularMovies = async (page) => {
   const { data } = await axios.get(`${API_URL}/movie/popular`, {
@@ -28,7 +28,6 @@ const fetchPopularMovies = async (page) => {
     totalPages: data.total_pages
   };
 };
-
 
 const fetchSearchMovies = async (query, page) => {
   const { data } = await axios.get(`${API_URL}/search/movie`, {
@@ -46,12 +45,10 @@ const fetchSearchMovies = async (query, page) => {
 };
 
 function HomePage({ searchTerm }) {
-
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['movies', searchTerm, page], 
-    
     queryFn: () => {
       if (searchTerm === '' || searchTerm === null) {
         return fetchPopularMovies(page);
@@ -75,7 +72,8 @@ function HomePage({ searchTerm }) {
   }
 
   const movies = data?.movies;
-  const totalPages = data?.totalPages;
+  const totalPagesFromAPI = data?.totalPages;
+  const totalPages = Math.min(totalPagesFromAPI, API_PAGE_LIMIT);
 
   return (
     <div className="container"> 
@@ -85,7 +83,6 @@ function HomePage({ searchTerm }) {
             <MovieCard key={movie.id} movie={movie} />
           ))
         ) : (
-        
           !isLoading && <p>Nenhum filme encontrado.</p>
         )}
       </div>

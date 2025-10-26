@@ -1,0 +1,55 @@
+.card {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  overflow: hidden; 
+  box-shadow: 0 4px 8px var(--shadow-color);
+  text-decoration: none;
+  display: flex; 
+  flex-direction: column;
+  height: 100%; 
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.poster {
+  width: 100%;
+  aspect-ratio: 2 / 3; 
+  object-fit: cover; 
+  display: block;
+  background-color: var(--bg-primary); 
+}
+
+.placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.info {
+  padding: 1rem;
+  flex-grow: 1; 
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
