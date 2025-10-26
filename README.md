@@ -80,3 +80,5 @@ Este desafio foi uma ótima oportunidade de aprendizado, especialmente em áreas
 * **Otimização de Imagens:** Implementar lazy loading.
 
 ---
+
+**[Tratamento da API Key]: A chave da TMDB é de acesso público/leitura e é exposta no cliente. Para ocultá-la em um ambiente de produção real, seria necessário implementar uma camada de proxy/servidor serverless (ex: Netlify Functions) para fazer o fetch no backend.**
