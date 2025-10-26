@@ -12,7 +12,7 @@ Siga os passos abaixo para executar o CineLite em sua máquina:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/Heysatirohere/CineSite.git](https://github.com/Heysatirohere/CineSite.git)
+    git clone https://github.com/Heysatirohere/CineSite.git
     # (Ou o link do seu repositório)
     cd CineSite/cinelite
     # (Navegue para a pasta do projeto)
