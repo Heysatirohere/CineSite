@@ -1,34 +1,8 @@
 import React from 'react';
-const paginationStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '1rem',
-  gap: '1rem'
-};
+import styles from '../Styles/Pagination.module.css';
 
-const buttonStyle = {
-  padding: '0.5rem 1rem',
-  border: '1px solid #ccc',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  backgroundColor: '#f4f4f4'
-};
-
-const disabledStyle = {
-  ...buttonStyle,
-  cursor: 'not-allowed',
-  backgroundColor: '#eee',
-  color: '#aaa'
-};
-
-const pageInfoStyle = {
-  fontSize: '1rem',
-  fontWeight: 'bold'
-};
 function Pagination({ currentPage, totalPages, onPageChange }) {
-
-  const handlePrev = () => {
+   const handlePrev = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
     }
@@ -39,24 +13,25 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
     }
   };
 
-  return (
-    <div style={paginationStyle}>
+return (
+    <div className={styles.paginationContainer}>
       <button 
         onClick={handlePrev}
+
+        className={styles.button}
         disabled={currentPage === 1}
-        style={currentPage === 1 ? disabledStyle : buttonStyle}
       >
         Anterior
       </button>
       
-      <span style={pageInfoStyle}>
+      <span className={styles.pageInfo}>
         Página {currentPage} de {totalPages}
       </span>
       
       <button
         onClick={handleNext}
+        className={styles.button}
         disabled={currentPage === totalPages}
-        style={currentPage === totalPages ? disabledStyle : buttonStyle}
       >
         Próxima
       </button>
