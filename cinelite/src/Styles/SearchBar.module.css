@@ -67,3 +67,15 @@
   font-size: 0.9rem;
   font-weight: 600;
 }
+
+.searchInput:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Opcional: Adicionar foco aos itens do dropdown */
+.dropdownItem:focus-visible {
+   outline: 2px solid var(--accent-color);
+   background-color: var(--bg-primary); 
+   color: var(--text-primary);
+}

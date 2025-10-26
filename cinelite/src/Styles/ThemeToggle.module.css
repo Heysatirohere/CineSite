@@ -17,3 +17,9 @@
   transform: scale(1.1);
   box-shadow: 0 0 10px var(--accent-color);
 }
+
+.toggleButton:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 10px var(--accent-color);
+}

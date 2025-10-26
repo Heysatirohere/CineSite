@@ -53,3 +53,9 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
+
+.card:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 3px; /* Pequeno espaço entre o card e o outline */
+  box-shadow: 0 0 10px var(--accent-color); /* Um brilho sutil */
+}
