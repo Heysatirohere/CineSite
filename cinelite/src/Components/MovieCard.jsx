@@ -1,12 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-
-function MovieCard({ movie }) {
-  
+function MovieCard({ movie }) { 
   
   const imageUrl = movie.poster_path 
     ? `${IMAGE_BASE_URL}${movie.poster_path}`

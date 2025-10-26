@@ -1,6 +1,5 @@
 import React from 'react';
 
-// Estilos inline básicos
 const errorStyle = {
   color: 'red',
   backgroundColor: '#ffeeee',

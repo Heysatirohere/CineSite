@@ -1,30 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import styles from '../Styles/SearchBar.module.css';
 
-const SearchBar = ({ onSearch, style }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (onSearch) {
-            onSearch(searchTerm);
-        }
+function SearchBar({ onSearch }) {
+  // Estado local para o que o usuário está digitando
+  const [inputValue, setInputValue] = useState('');
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+    
+      onSearch(inputValue);
+    }, 500); 
+    return () => {
+      clearTimeout(timerId);
     };
+  }, [inputValue, onSearch]);
 
-    return (
-       
-        <form onSubmit={handleSubmit} className="search-bar" style={style}>
-            <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search movies..."
-                className="search-input"
-            />
-            <button type="submit" className="search-button">
-                Search
-            </button>
-        </form>
-    );
-};
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  return (
+    <input
+      type="text"
+      placeholder="Buscar por título..."
+      value={inputValue}
+      onChange={handleChange}
+      className={styles.searchInput}
+    />
+  );
+}
 
 export default SearchBar;
