@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar'; 
 import styles from '../Styles/Header.module.css';
+import ThemeToggle from './ThemeToggle.jsx';
 
 // Recebe 'onSearch' do App.jsx
 function Header({ onSearch }) {
@@ -15,6 +16,7 @@ function Header({ onSearch }) {
         <div className={styles.searchWrapper}>
           <SearchBar onSearch={onSearch} />
         </div>
+        <ThemeToggle />
       </nav>
     </header>
   );

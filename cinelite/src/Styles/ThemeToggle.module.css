@@ -1,0 +1,19 @@
+.toggleButton {
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--accent-color);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Redondo */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.toggleButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px var(--accent-color);
+}
