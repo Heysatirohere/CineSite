@@ -1,21 +1,13 @@
 import React from 'react';
-
-
-const spinnerContainerStyle = {
-  padding: '2rem',
-  textAlign: 'center',
-  fontSize: '1.2rem',
-  color: '#555'
-};
+import styles from '../Styles/Spinner.module.css';
 
 function Spinner() {
   return (
-    <div style={spinnerContainerStyle}>
-      <p>Carregando...</p>
-      {}
+    <div className={styles.spinnerContainer}>
+      <div className={styles.spinner}></div>
+      <span>Carregando...</span>
     </div>
   );
 }
-
 
 export default Spinner;

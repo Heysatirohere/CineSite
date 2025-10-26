@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import styles from '../Styles/HomePage.module.css'; 
+import styles from '../Styles/HomePage.module.css';
+import { motion } from 'framer-motion';
 
 // Components
 import Spinner from "../Components/Spinner.jsx";
 import ErrorMessage from "../Components/ErrorMessage.jsx";
 import MovieCard from "../Components/MovieCard.jsx";
-import Pagination from '../Components/Pagination.jsx'; 
+import Pagination from '../Components/Pagination.jsx';
 
 // API's TMDB
 const API_URL = import.meta.env.VITE_API_URL;
@@ -19,7 +20,7 @@ const fetchPopularMovies = async (page) => {
     params: {
       api_key: API_KEY,
       language: 'pt-BR',
-      page: page 
+      page: page
     }
   });
 
@@ -38,17 +39,30 @@ const fetchSearchMovies = async (query, page) => {
       page: page
     }
   });
+
   return {
     movies: data.results,
     totalPages: data.total_pages
   };
 };
 
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  in: { opacity: 1, y: 0 },
+  out: { opacity: 0, y: -20 }
+};
+
+const pageTransition = {
+  type: 'tween',
+  ease: 'anticipate',
+  duration: 0.5
+};
+
 function HomePage({ searchTerm }) {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['movies', searchTerm, page], 
+    queryKey: ['movies', searchTerm, page],
     queryFn: () => {
       if (searchTerm === '' || searchTerm === null) {
         return fetchPopularMovies(page);
@@ -56,7 +70,7 @@ function HomePage({ searchTerm }) {
         return fetchSearchMovies(searchTerm, page);
       }
     },
-    keepPreviousData: true 
+    keepPreviousData: true
   });
 
   useEffect(() => {
@@ -76,24 +90,32 @@ function HomePage({ searchTerm }) {
   const totalPages = Math.min(totalPagesFromAPI, API_PAGE_LIMIT);
 
   return (
-    <div className="container"> 
-      <div className={styles.movieGrid}>
-        {movies && movies.length > 0 ? (
-          movies.map(movie => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))
-        ) : (
-          !isLoading && <p>Nenhum filme encontrado.</p>
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+    >
+      <div className="container">
+        <div className={styles.movieGrid}>
+          {movies && movies.length > 0 ? (
+            movies.map(movie => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))
+          ) : (
+            !isLoading && <p>Nenhum filme encontrado.</p>
+          )}
+        </div>
+        {totalPages > 0 && (
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         )}
       </div>
-      {totalPages > 0 && (
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      )}
-    </div>
+    </motion.div>
   );
 }
 

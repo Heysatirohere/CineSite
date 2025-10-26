@@ -5,6 +5,9 @@
   --text-secondary: #555555;   
   --accent-color: #0177d3;    
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --error-bg: #ffebee;
+  --error-border: #f44336;
+  --error-text: #d32f2f;
 }
 
 
@@ -15,6 +18,9 @@
   --text-secondary: #bbbbbb;
   --accent-color: #01b4e4;
   --shadow-color: rgba(0, 0, 0, 0.3);
+  --error-bg: #2b1c1c;
+  --error-border: #e57373;
+  --error-text: #ef9a9a;
 }
 
 * {
