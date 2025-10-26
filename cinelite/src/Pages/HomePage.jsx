@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom'; 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import styles from '../Styles/HomePage.module.css';
+import styles from '../Styles/HomePage.module.css'; 
 import { motion } from 'framer-motion';
 
-// Components
 import Spinner from "../Components/Spinner.jsx";
 import ErrorMessage from "../Components/ErrorMessage.jsx";
 import MovieCard from "../Components/MovieCard.jsx";
-import Pagination from '../Components/Pagination.jsx';
+import Pagination from '../Components/Pagination.jsx'; 
 
-// API's TMDB
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_PAGE_LIMIT = 500;
@@ -20,7 +19,7 @@ const fetchPopularMovies = async (page) => {
     params: {
       api_key: API_KEY,
       language: 'pt-BR',
-      page: page
+      page: page 
     }
   });
 
@@ -39,7 +38,6 @@ const fetchSearchMovies = async (query, page) => {
       page: page
     }
   });
-
   return {
     movies: data.results,
     totalPages: data.total_pages
@@ -59,10 +57,12 @@ const pageTransition = {
 };
 
 function HomePage({ searchTerm }) {
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = parseInt(searchParams.get('page') || '1', 10);
+  const [page, setPage] = useState(initialPage);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['movies', searchTerm, page],
+    queryKey: ['movies', searchTerm, page], 
     queryFn: () => {
       if (searchTerm === '' || searchTerm === null) {
         return fetchPopularMovies(page);
@@ -70,12 +70,24 @@ function HomePage({ searchTerm }) {
         return fetchSearchMovies(searchTerm, page);
       }
     },
-    keepPreviousData: true
+    keepPreviousData: true 
   });
 
   useEffect(() => {
-    setPage(1);
-  }, [searchTerm]);
+    const currentSearchParam = searchParams.get('search');
+    if ((searchTerm && searchTerm !== currentSearchParam) || (!searchTerm && currentSearchParam)) {
+        setPage(1); 
+    }
+  }, [searchTerm, searchParams]);
+
+  useEffect(() => {
+    const params = {};
+    if (searchTerm) {
+      params.search = searchTerm;
+    }
+    params.page = page.toString();
+    setSearchParams(params, { replace: true }); 
+  }, [page, searchTerm, setSearchParams]);
 
   if (isLoading) {
     return <Spinner />;
@@ -87,7 +99,11 @@ function HomePage({ searchTerm }) {
 
   const movies = data?.movies;
   const totalPagesFromAPI = data?.totalPages;
-  const totalPages = Math.min(totalPagesFromAPI, API_PAGE_LIMIT);
+  const totalPages = Math.min(totalPagesFromAPI || 0, API_PAGE_LIMIT); 
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage); 
+  };
 
   return (
     <motion.div
@@ -97,7 +113,7 @@ function HomePage({ searchTerm }) {
       variants={pageVariants}
       transition={pageTransition}
     >
-      <div className="container">
+      <div className="container"> 
         <div className={styles.movieGrid}>
           {movies && movies.length > 0 ? (
             movies.map(movie => (
@@ -107,11 +123,11 @@ function HomePage({ searchTerm }) {
             !isLoading && <p>Nenhum filme encontrado.</p>
           )}
         </div>
-        {totalPages > 0 && (
+        {totalPages > 0 && movies && movies.length > 0 && (
           <Pagination
             currentPage={page}
             totalPages={totalPages}
-            onPageChange={setPage}
+            onPageChange={handlePageChange}
           />
         )}
       </div>
