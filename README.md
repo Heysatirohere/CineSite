@@ -53,6 +53,48 @@ Siga os passos abaixo para executar o CineLite em sua máquina:
 
 ---
 
+## 🏗️ Estrutura de Pastas e Componentização
+
+A aplicação segue uma arquitetura modularizada em React, separando responsabilidades (lógica, UI, estilos) para clareza e manutenção.
+
+```text
+/cinelite
+├── /public
+├── /src
+│   ├── /Components
+│   │   ├── /Context          (ThemeContext Provider)
+│   │   ├── ErrorMessage.jsx  (Componente de estado de erro)
+│   │   ├── FilterControl.jsx (Controle UI de filtros por Gênero/Nota)
+│   │   ├── Footer.jsx
+│   │   ├── Header.jsx        (Contém a SearchBar e o ThemeToggle)
+│   │   ├── MovieCard.jsx     (Card reutilizável da listagem)
+│   │   ├── Pagination.jsx
+│   │   ├── SearchBar.jsx     (Componente de busca com dropdown)
+│   │   ├── Spinner.jsx       (Componente de estado de carregamento)
+│   │   └── ThemeToggle.jsx   (Botão de troca de tema)
+│   │
+│   ├── /Hook
+│   │   ├── useDebounce.js    (Hook para otimizar input range/search)
+│   │   └── useMovieFilters.js(Hook principal com a lógica de Fetch e Sincronização)
+│   │
+│   ├── /Pages
+│   │   ├── DetailsPage.jsx   (Página de detalhes do filme)
+│   │   └── HomePage.jsx      (Página de listagem e aplicação de filtros/busca)
+│   │
+│   ├── /Styles
+│   │   └── *.module.css      (Todos os estilos isolados via CSS Modules)
+│   │
+│   ├── App.jsx               (Define as rotas e o layout global)
+│   ├── index.css             (Variáveis CSS e estilos globais)
+│   └── main.jsx              (Configuração do React/Providers)
+│
+├── .env
+├── .gitignore
+└── package.json
+```
+
+---
+
 ## 🧠 Decisões Técnicas Principais
 
 * **Vite:** Escolhido como build tool pela sua velocidade de desenvolvimento (HMR rápido) e setup simplificado para React.
