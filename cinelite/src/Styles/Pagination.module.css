@@ -1,46 +1,175 @@
 .paginationContainer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 2rem 1rem; 
-  gap: 1.5rem; 
+  padding: 2rem 1rem;
+  gap: 1.5rem;
+  user-select: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mainControls {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;       /* permite quebrar linha se necessário */
+  justify-content: center;
 }
 
 .pageInfo {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-secondary);
-  user-select: none; 
+  color: var(--text-primary);
+  white-space: nowrap;
 }
 
+/* Botões Anterior/Próxima */
 .button {
-  padding: 0.75rem 1.5rem; 
-  border: 2px solid var(--accent-color); 
-  border-radius: 8px; 
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--accent-color);
+  border-radius: 8px;
   cursor: pointer;
-  background-color: var(--bg-secondary); 
+  background-color: var(--bg-secondary);
+  color: var(--accent-color);
   font-weight: 700;
   font-size: 0.9rem;
   text-transform: uppercase;
-  
-
   transition: all 0.3s ease;
 }
 
 .button:hover:not(:disabled) {
-  background-color: var(--accent-color); 
+  background-color: var(--accent-color);
   color: var(--bg-primary);
-  transform: scale(1.05); 
+  transform: scale(1.05);
   box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .button:disabled {
   cursor: not-allowed;
   background-color: transparent;
+  color: var(--text-secondary);
+  border-color: var(--text-secondary);
 }
 
 .button:focus-visible {
   outline: 3px solid var(--accent-color);
   outline-offset: 2px;
-  box-shadow: 0 0 8px var(--accent-color);
+}
+
+.jumpForm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 250px;
+}
+
+
+.jumpInput {
+  flex: 1 1 100px;
+  min-width: 80px;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 2px solid var(--text-secondary);
+  border-radius: 8px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 2.5rem;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.jumpInput::-webkit-outer-spin-button,
+.jumpInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.jumpInput[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+.jumpInput:hover {
+  border-color: var(--accent-color);
+}
+.jumpInput:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 6px var(--accent-color);
+}
+
+.jumpInput::placeholder {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 2.5rem;
+}
+
+/* Botão IR */
+.jumpButton {
+  flex: 0 0 auto;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accent-color);
+  color: var(--bg-primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jumpButton:hover:not(:disabled) {
+  background-color: var(--text-primary);
+  color: var(--bg-secondary);
+  transform: scale(1.05);
+}
+
+.jumpButton:disabled {
+  background-color: var(--text-secondary);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.jumpButton:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .mainControls {
+    flex-direction: column;  
+    gap: 0.5rem;
+  }
+
+  .pageInfo {
+    order: 1;               
+  }
+
+  .button {
+    width: 100%;           
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  .jumpForm {
+    max-width: 100%;
+    gap: 0.25rem;
+  }
+
+  .jumpInput,
+  .jumpButton {
+    height: 2.2rem;
+    font-size: 0.85rem;
+    line-height: 2.2rem;
+  }
 }
