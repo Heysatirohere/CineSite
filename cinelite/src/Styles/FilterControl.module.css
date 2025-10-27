@@ -1,11 +1,11 @@
 .filterContainer {
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 2rem; 
+  gap: 1.5rem;
   padding: 1.5rem 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--shadow-color);
 }
 
@@ -13,37 +13,43 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .filterGroup label {
   font-weight: 500;
   color: var(--text-secondary);
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 .selectInput,
 .rangeInput {
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 6px;
   border: 1px solid var(--text-secondary);
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  font-size: 0.95rem;
   transition: border-color 0.2s ease;
 }
 
-.selectInput:focus,
-.rangeInput:focus {
-  outline: none;
+.selectInput:focus-visible,
+.rangeInput:focus-visible,
+.resetButton:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
   border-color: var(--accent-color);
 }
 
 .selectInput {
-  min-width: 150px; 
+  min-width: 150px;
+  cursor: pointer;
 }
 
 .rangeInput {
   cursor: pointer;
 }
+
 
 .selectInput:disabled,
 .rangeInput:disabled {
@@ -52,24 +58,48 @@
   background-color: var(--bg-secondary);
 }
 
+
 .resetButton {
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1.2rem;
   border: 1px solid var(--text-secondary);
   border-radius: 6px;
   background-color: transparent;
   color: var(--text-secondary);
   font-weight: 500;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.resetButton:hover:not(:disabled) {
+/* Hover e focus simples */
+.resetButton:hover:not(:disabled),
+.resetButton:focus-visible:not(:disabled) {
   background-color: var(--accent-color);
   color: var(--bg-primary);
   border-color: var(--accent-color);
 }
 
 .resetButton:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .filterContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .filterGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .resetButton {
+    align-self: center;
+    width: 100%;
+    max-width: 300px;
+  }
 }

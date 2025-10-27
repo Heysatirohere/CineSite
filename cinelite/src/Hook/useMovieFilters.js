@@ -52,8 +52,10 @@ function useMovieFilters(searchTerm) {
 
   const [selectedGenre, setSelectedGenre] = useState(initialGenre);
   const [sliderRating, setSliderRating] = useState(initialRating);
-  const debouncedRating = useDebounce(sliderRating, 400);
   const [page, setPage] = useState(initialPage);
+  const [forceImmediate, setForceImmediate] = useState(false);
+
+  const debouncedRating = useDebounce(sliderRating, 400, forceImmediate);
 
   const { data: genres, isLoading: isLoadingGenres } = useQuery({
     queryKey: ['genres'],
@@ -70,40 +72,55 @@ function useMovieFilters(searchTerm) {
     queryKey: ['movies', searchTerm, selectedGenre, debouncedRating, page],
     queryFn: () => {
       if (searchTerm) return fetchSearchMovies(searchTerm, page);
-      if (selectedGenre || debouncedRating > 0) return fetchDiscoverMovies(page, selectedGenre, debouncedRating);
+      if (selectedGenre || debouncedRating > 0)
+        return fetchDiscoverMovies(page, selectedGenre, debouncedRating);
       return fetchPopularMovies(page);
     },
     keepPreviousData: true,
   });
 
-  // Atualiza URL sempre que filtros ou página mudarem
+  // --- Atualiza URL ---
   useEffect(() => {
     const params = {};
     if (searchTerm) params.search = searchTerm;
     if (selectedGenre) params.genre = selectedGenre;
-    if (debouncedRating > 0) params.rating = debouncedRating.toString();
-    params.page = page.toString();
+    if (debouncedRating > 0) params.rating = String(debouncedRating);
+    params.page = String(page);
+
     setSearchParams(params, { replace: true });
   }, [searchTerm, selectedGenre, debouncedRating, page, setSearchParams]);
 
-  // Atualiza estado ao mudar URL 
+  // --- Sincroniza estado com URL ---
   useEffect(() => {
     const urlPage = parseInt(searchParams.get('page') || '1', 10);
     const urlGenre = searchParams.get('genre') || '';
     const urlRating = parseFloat(searchParams.get('rating') || '0');
+
     if (urlPage !== page) setPage(urlPage);
     if (urlGenre !== selectedGenre) setSelectedGenre(urlGenre);
     if (urlRating !== sliderRating) setSliderRating(urlRating);
   }, [searchParams]);
 
   const handleGenreChange = useCallback((newGenreId) => setSelectedGenre(newGenreId), []);
-  const handleSliderRatingChange = useCallback((newRating) => setSliderRating(newRating), []);
+  const handleSliderRatingChange = useCallback((newRating) => {
+    setForceImmediate(false);
+    setSliderRating(newRating);
+  }, []);
   const handlePageChange = useCallback((newPage) => setPage(newPage), []);
+
   const handleResetFilters = useCallback(() => {
+    setForceImmediate(true); 
     setSelectedGenre('');
     setSliderRating(0);
     setPage(1);
-  }, []);
+
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    setSearchParams(params, { replace: true });
+
+    // volta o comportamento normal depois de 1 render
+    setTimeout(() => setForceImmediate(false), 50);
+  }, [setSearchParams]);
 
   return {
     page,

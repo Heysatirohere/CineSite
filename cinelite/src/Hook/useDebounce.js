@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
-function useDebounce(value, delay) {
-  // Estado para o valor "atrasado"
+
+function useDebounce(value, delay, forceImmediate = false) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    // Cria um timer
+    if (forceImmediate) {
+      setDebouncedValue(value);
+      return;
+    }
+
     const handler = setTimeout(() => {
-      setDebouncedValue(value); 
+      setDebouncedValue(value);
     }, delay);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]); 
+    return () => clearTimeout(handler);
+  }, [value, delay, forceImmediate]);
 
   return debouncedValue;
 }
+
 export default useDebounce;
